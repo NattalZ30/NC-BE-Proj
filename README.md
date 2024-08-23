@@ -1,6 +1,6 @@
 # Northcoders News API
 
-For instructions, please head over to [L2C NC News](https://l2c.northcoders.com/courses/be/nc-news).
+ The .env. files have been ignored. Please create an .env.test and .env.development with relevant databases
 
 
 
