@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const { checkExists } = require("../db/seeds/utils")
 
 exports.selectTopics = () => {
     return db.query("SELECT * FROM topics")
@@ -25,16 +26,17 @@ exports.selectArticles = () => {
             })
 }
 
-exports.selectArticleById = (article_id) => {
+exports.selectArticleById = async (article_id) => {
     let artiQuery = "SELECT * FROM articles"
     let queryVal = []
+    let querProms = []
     if (article_id){
         artiQuery += " WHERE article_id = $1"
         queryVal.push(article_id)
+        querProms.push(checkExists("articles","article_id",article_id))
     }
-    return db.query(artiQuery, queryVal)
-            .then(({ rows }) => {
-                if (rows.length === 0) return Promise.reject("404: NOT FOUND")
-                else return rows
+    querProms.push(db.query(artiQuery, queryVal))
+    return Promise.all(querProms).then((result) => {
+                return result[querProms.length - 1].rows
             })
 }
