@@ -19,6 +19,7 @@ describe("CORE:",() => {
                     const {
                         body: { topics },
                     } = response;
+                    expect(topics).toHaveLength(3)
                     topics.forEach((topic) => {
                         expect(topic).toHaveProperty("slug");
                         expect(topic).toHaveProperty("description");
@@ -43,7 +44,7 @@ describe("CORE:",() => {
 
     describe("Articles:", () => {
         describe("GET:", () => {
-            it.only("200: returns all articles", () => {
+            it("200: returns all articles", () => {
                 return request(app)
                 .get("/api/articles")
                 .expect(200)
@@ -52,6 +53,7 @@ describe("CORE:",() => {
                         body: { articles },
                     } = response;
                     expect(articles).toBeSortedBy('created_at', { descending: true, coerce: true})
+                    expect(articles).toHaveLength(13)
                     articles.forEach((article) => {
                         expect(article).not.toHaveProperty("body");
                         expect(article).toHaveProperty("author");
@@ -73,6 +75,7 @@ describe("CORE:",() => {
                     const {
                         body: { articles },
                     } = response;
+                    expect(articles).toHaveLength(1)
                     articles.forEach((article) => {
                         expect(article).toHaveProperty("author");
                         expect(article).toHaveProperty("title");
@@ -83,6 +86,14 @@ describe("CORE:",() => {
                         expect(article).toHaveProperty("votes");
                         expect(article).toHaveProperty("article_img_url");
                     })
+                })
+            })
+            it("400: returns Error message", () => {
+                return request(app)
+                .get("/api/articles/eeee")
+                .expect(400)
+                .then((response) => {
+                    expect(response.body.msg).toBe("400: BAD REQUEST")
                 })
             })
             it("404: returns Error message", () => {
