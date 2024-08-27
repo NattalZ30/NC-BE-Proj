@@ -28,4 +28,16 @@ describe("CORE:",() => {
 
         })
     })
+
+    it("200: returns all API endpoints", () => {
+        return request(app)
+        .get("/api")
+        .expect(200)
+        .then((response) => {
+            const {
+                body: { endpoints },
+            } = response;
+            expect(typeof endpoints).toBe("object")
+        })
+    })
 })
