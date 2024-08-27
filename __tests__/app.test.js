@@ -68,7 +68,7 @@ describe("CORE:",() => {
                 .get("/api/articles/100000000")
                 .expect(404)
                 .then((response) => {
-                    console.log(response)
+                    expect(response.body.msg).toBe("404: NOT FOUND")
                 })
             })
         })
