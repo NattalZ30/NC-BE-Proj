@@ -1,5 +1,6 @@
 const { 
     getTopics, 
+    getArticleById,
 } = require("./controllers/app-controllers")
 
 const { getAPIs } = require("./db/seeds/utils")
@@ -12,6 +13,8 @@ app.use(express.json())
 app.get("/api/topics", getTopics)
 
 app.get("/api", getAPIs)
+
+app.get("/api/articles/:article_id", getArticleById)
 
 //
 
