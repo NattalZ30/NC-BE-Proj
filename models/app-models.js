@@ -40,3 +40,18 @@ exports.selectArticleById = async (article_id) => {
                 return result[querProms.length - 1].rows
             })
 }
+
+exports.selectCommentsByArticle = async (article_id) => {
+    let artiQuery = "SELECT * FROM comments"
+    let queryVal = []
+    let querProms = []
+    if (article_id){
+        artiQuery += " WHERE article_id = $1"
+        queryVal.push(article_id)
+        querProms.push(checkExists("articles","article_id",article_id))
+    }
+    querProms.push(db.query(artiQuery, queryVal))
+    return Promise.all(querProms).then((result) => {
+                return result[querProms.length - 1].rows
+            })
+}
