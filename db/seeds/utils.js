@@ -20,3 +20,17 @@ exports.formatComments = (comments, idLookup) => {
     };
   });
 };
+
+const fs = require("fs/promises")
+
+exports.getAPIs = (req, res, next) => {
+    return fs.readFile("./endpoints.json","utf-8")
+    .then((data) => {
+        return JSON.parse(data)
+    })
+    .then((endpoints) => {
+        //console.log(data)
+        res.status(200).json({ endpoints });
+      })
+    .catch(next)
+}

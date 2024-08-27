@@ -2,12 +2,16 @@ const {
     getTopics, 
 } = require("./controllers/app-controllers")
 
+const { getAPIs } = require("./db/seeds/utils")
+
 const express = require("express")
 app = express()
 
 app.use(express.json())
 
 app.get("/api/topics", getTopics)
+
+app.get("/api", getAPIs)
 
 //
 
