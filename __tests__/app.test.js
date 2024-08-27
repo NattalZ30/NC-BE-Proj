@@ -43,6 +43,28 @@ describe("CORE:",() => {
 
     describe("Articles:", () => {
         describe("GET:", () => {
+            it.only("200: returns all articles", () => {
+                return request(app)
+                .get("/api/articles")
+                .expect(200)
+                .then((response) => {
+                    const {
+                        body: { articles },
+                    } = response;
+                    expect(articles).toBeSortedBy('created_at', { descending: true, coerce: true})
+                    articles.forEach((article) => {
+                        expect(article).not.toHaveProperty("body");
+                        expect(article).toHaveProperty("author");
+                        expect(article).toHaveProperty("title");
+                        expect(article).toHaveProperty("article_id");
+                        expect(article).toHaveProperty("comment_count");
+                        expect(article).toHaveProperty("created_at");
+                        expect(article).toHaveProperty("topic");
+                        expect(article).toHaveProperty("votes");
+                        expect(article).toHaveProperty("article_img_url");
+                    })
+                })
+            }),
             it("200: returns requested article", () => {
                 return request(app)
                 .get("/api/articles/1")
