@@ -3,6 +3,7 @@ const {
     getAPIs, 
     getArticleById,
     getArticles,
+    getCommentsByArticle,
 } = require("./controllers/app-controllers")
 
 const express = require("express")
@@ -17,6 +18,7 @@ app.get("/api", getAPIs)
 app.get("/api/articles", getArticles)
 
 app.get("/api/articles/:article_id", getArticleById)
+app.get("/api/articles/:article_id/comments", getCommentsByArticle)
 
 //
 
