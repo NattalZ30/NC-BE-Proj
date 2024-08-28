@@ -1,5 +1,5 @@
 const db = require("../db/connection");
-const { checkExists } = require("../db/seeds/utils")
+const { checkExists, convertDateToTimestamp } = require("../db/seeds/utils")
 
 exports.selectTopics = () => {
     return db.query("SELECT * FROM topics")
@@ -53,5 +53,24 @@ exports.selectCommentsByArticle = async (article_id) => {
     querProms.push(db.query(artiQuery, queryVal))
     return Promise.all(querProms).then((result) => {
                 return result[querProms.length - 1].rows
+            })
+}
+
+exports.insertCommentByArticle = async (article_id, comment) => {
+    let artiQuery = `INSERT INTO comments
+                        (author, body, article_id)`
+    let queryVal = [comment.username, comment.body, article_id]
+    let querProms = []
+    querProms.push(checkExists("articles","article_id",article_id))
+    querProms.push(checkExists("users","username",comment.username))
+    artiQuery += `VALUES
+                    ($1, $2, $3)
+                RETURNING *;`
+    querProms.push(db.query(artiQuery, queryVal))
+    return Promise.all(querProms).then((result) => {
+                return result[querProms.length - 1].rows
+            }).then((rows) => {
+                const newRows = convertDateToTimestamp(rows[0])
+                return [newRows]
             })
 }

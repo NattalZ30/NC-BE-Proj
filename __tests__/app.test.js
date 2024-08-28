@@ -165,5 +165,96 @@ describe("CORE:",() => {
                 })
             })
         })
+        describe("POST:", () => {
+            it("201: attaches new comment to an article", () => {
+                return request(app)
+                .post("/api/articles/1/comments")
+                .send({
+                    body:"meow",
+                    username: "icellusedkars",
+                })
+                .expect(201)
+                .then((response) => {
+                    const {
+                        body: { comment },
+                    } = response;
+                    const newComment = comment[0]
+                    expect(newComment.body).toBe("meow");
+                    expect(newComment.author).toBe("icellusedkars");
+                    expect(newComment.article_id).toBe(1);
+                    expect(newComment.comment_id).toBe(19);
+                    expect(newComment).toHaveProperty("created_at");
+                    expect(newComment.votes).toBe(0);
+                })
+            }),
+            it("201: attaches new comment to an article without comments", () => {
+                return request(app)
+                .post("/api/articles/4/comments")
+                .send({
+                    body:"meow",
+                    username: "icellusedkars",
+                })
+                .expect(201)
+                .then((response) => {
+                    const {
+                        body: { comment },
+                    } = response;
+                    const newComment = comment[0]
+                    expect(newComment.body).toBe("meow");
+                    expect(newComment.author).toBe("icellusedkars");
+                    expect(newComment.article_id).toBe(4);
+                    expect(newComment.comment_id).toBe(19);
+                    expect(newComment).toHaveProperty("created_at");
+                    expect(newComment.votes).toBe(0);
+                })
+            }),
+            it("404: valid article_id, but non-existent username", () => {
+                return request(app)
+                .post("/api/articles/1/comments")
+                .send({
+                    body:"meow",
+                    username: "theUser",
+                })
+                .expect(404)
+                .then((response) => {
+                    expect(response.body.msg).toBe("404: NOT FOUND")
+                })
+            }),
+            it("400: valid article_id, but missing inserts", () => {
+                return request(app)
+                .post("/api/articles/1/comments")
+                .send({
+                    username: "icellusedkars",
+                })
+                .expect(400)
+                .then((response) => {
+                    expect(response.body.msg).toBe("400: BAD REQUEST")
+                })
+            }),
+            it("400: invalid article_id", () => {
+                return request(app)
+                .post("/api/articles/eeee/comments")
+                .send({
+                    body:"meow",
+                    username: "icellusedkars",
+                })
+                .expect(400)
+                .then((response) => {
+                    expect(response.body.msg).toBe("400: BAD REQUEST")
+                })
+            }),
+            it("404: non-existent article", () => {
+                return request(app)
+                .post("/api/articles/100000000/comments")
+                .send({
+                    body:"meow",
+                    username: "icellusedkars",
+                })
+                .expect(404)
+                .then((response) => {
+                    expect(response.body.msg).toBe("404: NOT FOUND")
+                })
+            })
+        })
     })
 })
