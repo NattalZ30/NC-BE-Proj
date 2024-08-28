@@ -64,5 +64,21 @@
         }
       ]
     }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "creates a new comment on the requested article using the article ID",
+    "queries": ["article_id", "username", "body"],
+    "exampleResponse": {
+      "articles": [
+        {
+          "created_at": 1724844440485,
+        "comment_id": 19,
+        "body": "meow",
+        "article_id": 4,
+        "author": "icellusedkars",
+        "votes": 0
+        }
+      ]
+    }
   }
 }

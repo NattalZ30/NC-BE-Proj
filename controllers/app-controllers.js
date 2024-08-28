@@ -1,7 +1,8 @@
 const { selectTopics, 
   selectArticleById, 
   selectArticles, 
-  selectCommentsByArticle, 
+  selectCommentsByArticle,
+  insertCommentByArticle, 
 } = require("../models/app-models")
 const fs = require("fs/promises")
 
@@ -51,4 +52,13 @@ exports.getCommentsByArticle = (req, res, next) => {
   .catch(next)
 }
 
+exports.postCommentByArticle = (req, res, next) => {
+  const { article_id } = req.params
+  const comment = req.body
+  insertCommentByArticle(article_id, comment)
+  .then((comment) => {
+      res.status(201).send({ comment });
+    })
+  .catch(next)
+}
 
