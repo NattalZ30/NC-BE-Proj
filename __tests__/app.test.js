@@ -105,6 +105,39 @@ describe("CORE:",() => {
                 })
             })
         })
+        describe("PATCH:", () => {
+            it("200: patches given article", () => {
+                return request(app)
+                .patch("/api/articles/1")
+                .send({
+                    inc_votes : 1 
+                })
+                .expect(200)
+                .then((response) => {
+                    const {
+                        body: { update },
+                    } = response;
+                    expect(update).toHaveLength(1)
+                    expect(update[0].votes).toBe(101);
+                })
+            }),
+            it("400: returns Error message", () => {
+                return request(app)
+                .get("/api/articles/eeee")
+                .expect(400)
+                .then((response) => {
+                    expect(response.body.msg).toBe("400: BAD REQUEST")
+                })
+            })
+            it("404: returns Error message", () => {
+                return request(app)
+                .patch("/api/articles/100000000")
+                .expect(404)
+                .then((response) => {
+                    expect(response.body.msg).toBe("404: NOT FOUND")
+                })
+            })
+        })
     })
     describe("Comments:", () => {
         describe("GET:", () => {

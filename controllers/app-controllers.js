@@ -2,7 +2,8 @@ const { selectTopics,
   selectArticleById, 
   selectArticles, 
   selectCommentsByArticle,
-  insertCommentByArticle, 
+  insertCommentByArticle,
+  updateArticleById, 
 } = require("../models/app-models")
 const fs = require("fs/promises")
 
@@ -58,6 +59,16 @@ exports.postCommentByArticle = (req, res, next) => {
   insertCommentByArticle(article_id, comment)
   .then((comment) => {
       res.status(201).send({ comment });
+    })
+  .catch(next)
+}
+
+exports.patchArticleById = (req, res, next) => {
+  const { article_id } = req.params
+  const update = req.body
+  updateArticleById(article_id, update)
+  .then((update) => {
+      res.status(200).send({ update });
     })
   .catch(next)
 }

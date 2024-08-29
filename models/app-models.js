@@ -74,3 +74,10 @@ exports.insertCommentByArticle = async (article_id, comment) => {
                 return [newRows]
             })
 }
+
+exports.updateArticleById = async (article_id, update) =>{
+    const queryVal = [update.inc_votes, article_id]
+    await checkExists("articles","article_id",article_id)
+    return db.query(`UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *`, queryVal)
+    .then(({ rows }) => rows)
+}
