@@ -36,14 +36,16 @@ exports.selectArticles = ( sort_by = "created_at", order = "DESC", topic) => {
 }
 
 exports.selectArticleById = async (article_id) => {
-    let artiQuery = "SELECT * FROM articles"
+    let artiQuery = `SELECT articles.*,COUNT(comment_id) AS comment_count FROM articles`
+    artiQuery += ` LEFT JOIN comments ON comments.article_id = articles.article_id`
     let queryVal = []
     let querProms = []
     if (article_id){
-        artiQuery += " WHERE article_id = $1"
+        artiQuery += " WHERE articles.article_id = $1"
         queryVal.push(article_id)
         querProms.push(checkExists("articles","article_id",article_id))
     }
+    artiQuery +=  ` GROUP BY articles.article_id `
     querProms.push(db.query(artiQuery, queryVal))
     return Promise.all(querProms).then((result) => {
                 return result[querProms.length - 1].rows

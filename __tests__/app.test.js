@@ -147,6 +147,7 @@ describe("CORE:",() => {
                         expect(article).toHaveProperty("topic");
                         expect(article).toHaveProperty("votes");
                         expect(article).toHaveProperty("article_img_url");
+                        expect(article).toHaveProperty("comment_count")
                     })
                 })
             })
