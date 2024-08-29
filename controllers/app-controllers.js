@@ -3,7 +3,8 @@ const { selectTopics,
   selectArticles, 
   selectCommentsByArticle,
   insertCommentByArticle,
-  updateArticleById, 
+  updateArticleById,
+  deleteCommentById, 
 } = require("../models/app-models")
 const fs = require("fs/promises")
 
@@ -73,3 +74,11 @@ exports.patchArticleById = (req, res, next) => {
   .catch(next)
 }
 
+exports.findCommentById = (req, res, next) => {
+  const { comment_id } = req.params
+  deleteCommentById(comment_id)
+  .then((deleted) => {
+    res.status(204).send({ deleted });
+  })
+  .catch(next)
+}
