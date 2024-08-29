@@ -98,6 +98,37 @@ describe("CORE:",() => {
                     expect(response.body.msg).toBe("400: BAD REQUEST")
                 })
             }),
+            it("200: returns all articles (topics filter queries)", () => {
+                return request(app)
+                .get("/api/articles?topic=mitch")
+                .expect(200)
+                .then((response) => {
+                    const {
+                        body: { articles },
+                    } = response;
+                    expect(articles).toBeSortedBy('created_at', { descending: true, coerce: true})
+                    expect(articles).toHaveLength(12)
+                    articles.forEach((article) => {
+                        expect(article).not.toHaveProperty("body");
+                        expect(article).toHaveProperty("author");
+                        expect(article).toHaveProperty("title");
+                        expect(article).toHaveProperty("article_id");
+                        expect(article).toHaveProperty("comment_count");
+                        expect(article).toHaveProperty("created_at");
+                        expect(article).toHaveProperty("topic");
+                        expect(article).toHaveProperty("votes");
+                        expect(article).toHaveProperty("article_img_url");
+                    })
+                })
+            }),
+            it("404: returns Error message for non existent topic", () => {
+                return request(app)
+                .get("/api/articles?topic=e")
+                .expect(404)
+                .then((response) => {
+                    expect(response.body.msg).toBe("404: NOT FOUND")
+                })
+            })
             it("200: returns requested article", () => {
                 return request(app)
                 .get("/api/articles/1")
