@@ -288,6 +288,29 @@ describe("CORE:",() => {
                     expect(response.body.msg).toBe("404: NOT FOUND")
                 })
             })
+        }),
+        describe("DELETE:", () => {
+            it("204: deletes and returns given comments", () => {
+                return request(app)
+                .delete("/api/comments/1")
+                .expect(204)
+            }),
+            it("400: returns Error message", () => {
+                return request(app)
+                .delete("/api/comments/eeee")
+                .expect(400)
+                .then((response) => {
+                    expect(response.body.msg).toBe("400: BAD REQUEST")
+                })
+            })
+            it("404: returns Error message", () => {
+                return request(app)
+                .delete("/api/comments/100000000")
+                .expect(404)
+                .then((response) => {
+                    expect(response.body.msg).toBe("404: NOT FOUND")
+                })
+            })
         })
     })
 })

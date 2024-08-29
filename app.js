@@ -6,6 +6,7 @@ const {
     getCommentsByArticle,
     postCommentByArticle,
     patchArticleById,
+    findCommentById,
 } = require("./controllers/app-controllers")
 
 const express = require("express")
@@ -30,6 +31,10 @@ app.post("/api/articles/:article_id/comments", postCommentByArticle)
 
 //PATCH
 app.patch("/api/articles/:article_id", patchArticleById)
+
+//DELETE
+
+app.delete("/api/comments/:comment_id", findCommentById)
 
 ////////////////////////
 
