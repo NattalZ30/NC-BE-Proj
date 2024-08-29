@@ -67,6 +67,37 @@ describe("CORE:",() => {
                     })
                 })
             }),
+            it("200: returns all articles (sorting queries)", () => {
+                return request(app)
+                .get("/api/articles?sort_by=comment_count&order=asc")
+                .expect(200)
+                .then((response) => {
+                    const {
+                        body: { articles },
+                    } = response;
+                    expect(articles).toBeSortedBy('comment_count', { descending: false, coerce: true})
+                    expect(articles).toHaveLength(13)
+                    articles.forEach((article) => {
+                        expect(article).not.toHaveProperty("body");
+                        expect(article).toHaveProperty("author");
+                        expect(article).toHaveProperty("title");
+                        expect(article).toHaveProperty("article_id");
+                        expect(article).toHaveProperty("comment_count");
+                        expect(article).toHaveProperty("created_at");
+                        expect(article).toHaveProperty("topic");
+                        expect(article).toHaveProperty("votes");
+                        expect(article).toHaveProperty("article_img_url");
+                    })
+                })
+            }),
+            it("400: invalid sorting queries", () => {
+                return request(app)
+                .get("/api/articles?sort_by=comment_count&order=assc")
+                .expect(400)
+                .then((response) => {
+                    expect(response.body.msg).toBe("400: BAD REQUEST")
+                })
+            }),
             it("200: returns requested article", () => {
                 return request(app)
                 .get("/api/articles/1")

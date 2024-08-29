@@ -6,7 +6,12 @@ exports.selectTopics = () => {
             .then(({ rows }) => rows)
 }
 
-exports.selectArticles = () => {
+exports.selectArticles = (sort_by = "created_at", order = "DESC") => {
+    const validSortByQuery = ["author","title","article_id","topic","created_at","votes","article_img_url","comment_count"]
+    const validOrder = ["ASC","DESC"]
+    if (!validSortByQuery.includes(sort_by) || !validOrder.includes(order.toUpperCase())){
+        return Promise.reject("400: BAD REQUEST")
+    }
     let artiQuery = `SELECT articles.author, 
                     articles.title,
                     articles.article_id, 
@@ -18,7 +23,7 @@ exports.selectArticles = () => {
                      FROM articles`
     artiQuery += ` LEFT JOIN comments ON comments.article_id = articles.article_id 
                    GROUP BY articles.article_id`
-    artiQuery += ` ORDER BY created_at DESC`
+    artiQuery += ` ORDER BY ${sort_by} ${order.toUpperCase()}`
     return db.query(artiQuery)
             .then(({ rows }) => {
                 if (rows.length === 0) return Promise.reject("404: NOT FOUND")
