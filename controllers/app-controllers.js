@@ -30,7 +30,8 @@ exports.getAPIs = (req, res, next) => {
 }
 
 exports.getArticles = (req, res, next) => {
-  selectArticles()
+  const {sort_by, order} = req.query
+  selectArticles(sort_by, order)
   .then((articles) => {
       res.status(200).send({ articles });
     })
