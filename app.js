@@ -7,6 +7,7 @@ const {
     postCommentByArticle,
     patchArticleById,
     findCommentById,
+    getUsers,
 } = require("./controllers/app-controllers")
 
 const express = require("express")
@@ -24,6 +25,8 @@ app.get("/api/articles", getArticles)
 
 app.get("/api/articles/:article_id", getArticleById)
 app.get("/api/articles/:article_id/comments", getCommentsByArticle)
+
+app.get("/api/users", getUsers)
 
 //POST
 

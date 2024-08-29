@@ -312,5 +312,26 @@ describe("CORE:",() => {
                 })
             })
         })
+    },)
+    describe("Users:", () => {
+        describe("GET:", () => {
+            it("200: returns all Users", () => {
+                return request(app)
+                .get("/api/users")
+                .expect(200)
+                .then((response) => {
+                    const {
+                        body: { users },
+                    } = response;
+                    expect(users).toHaveLength(4)
+                    users.forEach((user) => {
+                        expect(user).toHaveProperty("username");
+                        expect(user).toHaveProperty("name");
+                        expect(user).toHaveProperty("avatar_url");
+                    })
+                })
+            })
+
+        })
     })
 })
