@@ -4,7 +4,8 @@ const { selectTopics,
   selectCommentsByArticle,
   insertCommentByArticle,
   updateArticleById,
-  deleteCommentById, 
+  deleteCommentById,
+  selectUsers, 
 } = require("../models/app-models")
 const fs = require("fs/promises")
 
@@ -80,5 +81,13 @@ exports.findCommentById = (req, res, next) => {
   .then((deleted) => {
     res.status(204).send({ deleted });
   })
+  .catch(next)
+}
+
+exports.getUsers = (req, res, next) => {
+  selectUsers()
+  .then((users) => {
+      res.status(200).send({ users });
+    })
   .catch(next)
 }
