@@ -27,8 +27,8 @@
     }
   },
   "GET /api/articles": {
-    "description": "serves an array of all articles (allows sorting queries)",
-    "queries": ["sort_by", "order"],
+    "description": "serves an array of all articles (allows filter and sorting queries)",
+    "queries": ["sort_by", "order", "topic"],
     "exampleResponse": {
       "articles": [
         {

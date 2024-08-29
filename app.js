@@ -43,7 +43,7 @@ app.delete("/api/comments/:comment_id", findCommentById)
 
 app.use((err,req,res,next) => {
     //console.log(err)
-    if (err.code === "22P02" || err.code === "23502" || err === "400: BAD REQUEST"){
+    if (err.code === "22P02" || err.code === "23502"){
         res.status(400).json({msg:"400: BAD REQUEST"})
     }
     else next(err)
@@ -51,8 +51,9 @@ app.use((err,req,res,next) => {
 
 app.use((err,req,res,next) => {
     //console.log(err)
-    if (err === "404: NOT FOUND"){
-        res.status(404).json({msg:"404: NOT FOUND"})
+    if (err.status && err.msg)
+    {
+        res.status(err.status).json({msg:err.msg})
     }
     else next(err)
 })

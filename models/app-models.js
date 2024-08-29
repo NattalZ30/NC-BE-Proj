@@ -6,12 +6,13 @@ exports.selectTopics = () => {
             .then(({ rows }) => rows)
 }
 
-exports.selectArticles = (sort_by = "created_at", order = "DESC") => {
+exports.selectArticles = ( sort_by = "created_at", order = "DESC", topic) => {
     const validSortByQuery = ["author","title","article_id","topic","created_at","votes","article_img_url","comment_count"]
     const validOrder = ["ASC","DESC"]
     if (!validSortByQuery.includes(sort_by) || !validOrder.includes(order.toUpperCase())){
-        return Promise.reject("400: BAD REQUEST")
+        return Promise.reject({status: 400, msg: "400: BAD REQUEST"})
     }
+    const querVal = []
     let artiQuery = `SELECT articles.author, 
                     articles.title,
                     articles.article_id, 
@@ -21,12 +22,15 @@ exports.selectArticles = (sort_by = "created_at", order = "DESC") => {
                     articles.article_img_url,
                     COUNT(comment_id) AS comment_count 
                      FROM articles`
-    artiQuery += ` LEFT JOIN comments ON comments.article_id = articles.article_id 
-                   GROUP BY articles.article_id`
-    artiQuery += ` ORDER BY ${sort_by} ${order.toUpperCase()}`
-    return db.query(artiQuery)
+    artiQuery += ` LEFT JOIN comments ON comments.article_id = articles.article_id `                  
+    if (topic){
+        artiQuery += ` WHERE articles.topic = $1`
+        querVal.push(topic)
+    }
+    artiQuery += ` GROUP BY articles.article_id ORDER BY ${sort_by} ${order.toUpperCase()}`
+    return db.query(artiQuery, querVal)
             .then(({ rows }) => {
-                if (rows.length === 0) return Promise.reject("404: NOT FOUND")
+                if (rows.length === 0) return Promise.reject({status: 404, msg: "404: NOT FOUND"})
                 else return rows
             })
 }

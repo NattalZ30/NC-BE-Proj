@@ -34,6 +34,6 @@ exports.checkExists = async (table, column, value) => {
   const dbOutput = await db.query(queryStr, [value]);
   if (dbOutput.rows.length === 0) {
     // resource does NOT exist
-    return Promise.reject("404: NOT FOUND" );
+    return Promise.reject({status: 404, msg: "404: NOT FOUND"});
   }
 };
